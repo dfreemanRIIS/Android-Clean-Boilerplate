@@ -9,7 +9,23 @@ import static org.junit.Assert.*;
  */
 public class ExampleUnitTest {
     @Test
-    public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+    public void testWelcomeMessageFound() throws Exception {
+
+        String msg = "Welcome, friend!";
+
+        when(mMessageRepository.getWelcomeMessage())
+                .thenReturn(msg);
+
+        WelcomingInteractorImpl interactor = new WelcomingInteractorImpl(
+                mExecutor,
+                mMainThread,
+                mMockedCallback,
+                mMessageRepository
+        );
+        interactor.run();
+
+        Mockito.verify(mMessageRepository).getWelcomeMessage();
+        Mockito.verifyNoMoreInteractions(mMessageRepository);
+        Mockito.verify(mMockedCallback).onMessageRetrieved(msg);
     }
 }
